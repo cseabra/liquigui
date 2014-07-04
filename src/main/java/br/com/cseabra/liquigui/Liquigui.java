@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
@@ -38,6 +40,7 @@ public class Liquigui extends JFrame {
 	private final JButton btnAddParemeter = new JButton("Adicionar parâmetro");
 	private final JPanel pnlSouth = new JPanel();
 	private final JButton btnExecute = new JButton("Executar");
+	private final PropertiesManager propertiesManager = new PropertiesManager();
 
 	private final ActionListener cbxCommandsActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -91,9 +94,21 @@ public class Liquigui extends JFrame {
 			System.out.println(sb.toString());
 			final LiquiguiCommandExecutor frame = new LiquiguiCommandExecutor();
 			frame.setVisible(true);
+			saveProperties();
 			frame.executeCommand(sb.toString());
 		}
 	};
+	private final JPanel panel = new JPanel();
+	private final JLabel lblNewLabel = new JLabel("Driver");
+	private final JTextField txtDriver = new JTextField();
+	private final JLabel lblNewLabel_1 = new JLabel("URL");
+	private final JTextField txtUrl = new JTextField();
+	private final JLabel lblUsername = new JLabel("Username");
+	private final JTextField txtUsernae = new JTextField();
+	private final JLabel lblPassword = new JLabel("Password");
+	private final JTextField txtPassword = new JTextField();
+	private final JLabel lblChangelogfile = new JLabel("changeLogFile");
+	private final JTextField txtChangeLogFile = new JTextField();
 
 	/**
 	 * Launch the application.
@@ -112,12 +127,14 @@ public class Liquigui extends JFrame {
 	}
 
 	public Liquigui() {
+		txtUrl.setColumns(10);
+		txtDriver.setColumns(10);
 		buildGUI();
 	}
 
 	private void buildGUI() {
 		//Configura janela
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 523, 309);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -154,6 +171,36 @@ public class Liquigui extends JFrame {
 		contentPane.add(lblLiquigui, BorderLayout.NORTH);
 		contentPane.add(pnlCenter);
 		contentPane.add(pnlSouth, BorderLayout.SOUTH);
+		pnlCenter.add(panel);
+		panel.setLayout(new GridLayout(5, 2, 0, 0));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		panel.add(lblNewLabel);
+		
+		panel.add(txtDriver);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		panel.add(lblNewLabel_1);
+		
+		panel.add(txtUrl);
+		lblUsername.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		panel.add(lblUsername);
+		txtUsernae.setColumns(10);
+		
+		panel.add(txtUsernae);
+		lblPassword.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		panel.add(lblPassword);
+		txtPassword.setColumns(10);
+		
+		panel.add(txtPassword);
+		lblChangelogfile.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		panel.add(lblChangelogfile);
+		txtChangeLogFile.setColumns(10);
+		
+		panel.add(txtChangeLogFile);
 		pnlCenter.add(pnlCommand);
 		pnlCommand.add(lblEscolhaOComando);
 		pnlCommand.add(cbxCommands);
@@ -161,7 +208,25 @@ public class Liquigui extends JFrame {
 		pnlCenter.add(pnlParameters);
 		pnlSouth.add(btnExecute, BorderLayout.CENTER);
 		
+		loadProperties();
+		
 		enableDisableBtnAddParemeter();
+	}
+
+	private void loadProperties() {
+		txtChangeLogFile.setText(propertiesManager.getChangeLogFile());
+		txtDriver.setText(propertiesManager.getDriver());
+		txtPassword.setText(propertiesManager.getPassword());
+		txtUsernae.setText(propertiesManager.getUsername());
+		txtUrl.setText(propertiesManager.getUrl());
+	}
+	private void saveProperties() {
+		propertiesManager.setChangeLogFile(txtChangeLogFile.getText());
+		propertiesManager.setDriver(txtDriver.getText());
+		propertiesManager.setPassword(txtPassword.getText());
+		propertiesManager.setUsername(txtUsernae.getText());
+		propertiesManager.setUrl(txtUrl.getText());
+		propertiesManager.save();
 	}
 	
 	private boolean canAddParemeter(){
