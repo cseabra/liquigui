@@ -6,9 +6,13 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +54,20 @@ public class Liquigui extends JFrame {
 			enableDisableBtnAddParemeter();
 		}
 	};
+	
+	private final ActionListener cbxDatabasesListener = new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {
+			changeSchemaValue();
+		}
+	};
+	private final KeyListener txtSchemaKeyListener = new KeyListener() {
+		public void keyPressed(KeyEvent e) {}
+		public void keyReleased(KeyEvent e) {
+			changeSchemaValue();
+		}
+		public void keyTyped(KeyEvent e) {}
+	};
+	
 	private final ActionListener btnAddParemeterActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 			pnlParameters.add(new PnlParameter(getCurrentLiquibaseCommand(), pnlParameters, new ActionListener() {
@@ -100,7 +118,7 @@ public class Liquigui extends JFrame {
 	};
 	private final JPanel panel = new JPanel();
 	private final JLabel lblNewLabel = new JLabel("Driver");
-	private final JTextField txtDriver = new JTextField();
+	private final JComboBox<DatabaseType> cbxDatabases = new JComboBox<DatabaseType>();
 	private final JLabel lblNewLabel_1 = new JLabel("URL");
 	private final JTextField txtUrl = new JTextField();
 	private final JLabel lblUsername = new JLabel("Username");
@@ -109,6 +127,8 @@ public class Liquigui extends JFrame {
 	private final JTextField txtPassword = new JTextField();
 	private final JLabel lblChangelogfile = new JLabel("changeLogFile");
 	private final JTextField txtChangeLogFile = new JTextField();
+	private final JLabel lblSchema = new JLabel("Schema");
+	private final JTextField txtSchema = new JTextField();
 
 	/**
 	 * Launch the application.
@@ -128,13 +148,12 @@ public class Liquigui extends JFrame {
 
 	public Liquigui() {
 		txtUrl.setColumns(10);
-		txtDriver.setColumns(10);
 		buildGUI();
 	}
 
 	private void buildGUI() {
 		//Configura janela
-		setBounds(100, 100, 523, 309);
+		setBounds(100, 100, 523, 327);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -165,6 +184,7 @@ public class Liquigui extends JFrame {
 		cbxCommands.addActionListener(cbxCommandsActionListener);
 		btnAddParemeter.addActionListener(btnAddParemeterActionListener);
 		btnExecute.addActionListener(btnExecuteActionListener);
+		txtSchema.addKeyListener(txtSchemaKeyListener);
 
 		//Adiciona paineis uns aos outros
 		setContentPane(contentPane);
@@ -172,41 +192,110 @@ public class Liquigui extends JFrame {
 		contentPane.add(pnlCenter);
 		contentPane.add(pnlSouth, BorderLayout.SOUTH);
 		pnlCenter.add(panel);
-		panel.setLayout(new GridLayout(5, 2, 0, 0));
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] {75, 400, 0};
+		gbl_panel.rowHeights = new int[]{30, 30, 30, 30, 30, 30, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		panel.add(lblNewLabel);
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.fill = GridBagConstraints.BOTH;
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 0;
+		gbc_lblNewLabel.gridy = 0;
+		panel.add(lblNewLabel, gbc_lblNewLabel);
+				cbxDatabases.setModel(new DefaultComboBoxModel<DatabaseType>(DatabaseType.values()));
+				cbxDatabases.addActionListener(cbxDatabasesListener);
+				
+				GridBagConstraints gbc_cbxDatabases = new GridBagConstraints();
+				gbc_cbxDatabases.fill = GridBagConstraints.BOTH;
+				gbc_cbxDatabases.insets = new Insets(0, 0, 5, 0);
+				gbc_cbxDatabases.gridx = 1;
+				gbc_cbxDatabases.gridy = 0;
+				panel.add(cbxDatabases, gbc_cbxDatabases);
 		
-		panel.add(txtDriver);
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		panel.add(lblNewLabel_1);
-		
-		panel.add(txtUrl);
+				GridBagConstraints gbc_lblSchema = new GridBagConstraints();
+				gbc_lblSchema.fill = GridBagConstraints.BOTH;
+				gbc_lblSchema.insets = new Insets(0, 0, 5, 5);
+				gbc_lblSchema.gridx = 0;
+				gbc_lblSchema.gridy = 1;
+				panel.add(lblSchema, gbc_lblSchema);
+		GridBagConstraints gbc_txtSchema = new GridBagConstraints();
+		gbc_txtSchema.fill = GridBagConstraints.BOTH;
+		gbc_txtSchema.insets = new Insets(0, 0, 5, 0);
+		gbc_txtSchema.gridx = 1;
+		gbc_txtSchema.gridy = 1;
+		panel.add(txtSchema, gbc_txtSchema);
 		lblUsername.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		panel.add(lblUsername);
+		GridBagConstraints gbc_lblUsername = new GridBagConstraints();
+		gbc_lblUsername.fill = GridBagConstraints.BOTH;
+		gbc_lblUsername.insets = new Insets(0, 0, 5, 5);
+		gbc_lblUsername.gridx = 0;
+		gbc_lblUsername.gridy = 2;
+		panel.add(lblUsername, gbc_lblUsername);
 		txtUsernae.setColumns(10);
 		
-		panel.add(txtUsernae);
+		GridBagConstraints gbc_txtUsernae = new GridBagConstraints();
+		gbc_txtUsernae.fill = GridBagConstraints.BOTH;
+		gbc_txtUsernae.insets = new Insets(0, 0, 5, 0);
+		gbc_txtUsernae.gridx = 1;
+		gbc_txtUsernae.gridy = 2;
+		panel.add(txtUsernae, gbc_txtUsernae);
 		lblPassword.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		panel.add(lblPassword);
+		GridBagConstraints gbc_lblPassword = new GridBagConstraints();
+		gbc_lblPassword.fill = GridBagConstraints.BOTH;
+		gbc_lblPassword.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPassword.gridx = 0;
+		gbc_lblPassword.gridy = 3;
+		panel.add(lblPassword, gbc_lblPassword);
 		txtPassword.setColumns(10);
 		
-		panel.add(txtPassword);
+		GridBagConstraints gbc_txtPassword = new GridBagConstraints();
+		gbc_txtPassword.fill = GridBagConstraints.BOTH;
+		gbc_txtPassword.insets = new Insets(0, 0, 5, 0);
+		gbc_txtPassword.gridx = 1;
+		gbc_txtPassword.gridy = 3;
+		panel.add(txtPassword, gbc_txtPassword);
 		lblChangelogfile.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		panel.add(lblChangelogfile);
+		GridBagConstraints gbc_lblChangelogfile = new GridBagConstraints();
+		gbc_lblChangelogfile.fill = GridBagConstraints.BOTH;
+		gbc_lblChangelogfile.insets = new Insets(0, 0, 5, 5);
+		gbc_lblChangelogfile.gridx = 0;
+		gbc_lblChangelogfile.gridy = 4;
+		panel.add(lblChangelogfile, gbc_lblChangelogfile);
 		txtChangeLogFile.setColumns(10);
 		
-		panel.add(txtChangeLogFile);
+		GridBagConstraints gbc_txtChangeLogFile = new GridBagConstraints();
+		gbc_txtChangeLogFile.fill = GridBagConstraints.BOTH;
+		gbc_txtChangeLogFile.insets = new Insets(0, 0, 5, 0);
+		gbc_txtChangeLogFile.gridx = 1;
+		gbc_txtChangeLogFile.gridy = 4;
+		panel.add(txtChangeLogFile, gbc_txtChangeLogFile);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.fill = GridBagConstraints.BOTH;
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel_1.gridx = 0;
+		gbc_lblNewLabel_1.gridy = 5;
+		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		GridBagConstraints gbc_txtUrl = new GridBagConstraints();
+		gbc_txtUrl.fill = GridBagConstraints.BOTH;
+		gbc_txtUrl.gridx = 1;
+		gbc_txtUrl.gridy = 5;
+		panel.add(txtUrl, gbc_txtUrl);
 		pnlCenter.add(pnlCommand);
 		pnlCommand.add(lblEscolhaOComando);
 		pnlCommand.add(cbxCommands);
 		pnlCommand.add(btnAddParemeter);
 		pnlCenter.add(pnlParameters);
 		pnlSouth.add(btnExecute, BorderLayout.CENTER);
+		
 		
 		loadProperties();
 		
@@ -215,14 +304,18 @@ public class Liquigui extends JFrame {
 
 	private void loadProperties() {
 		txtChangeLogFile.setText(propertiesManager.getChangeLogFile());
-		txtDriver.setText(propertiesManager.getDriver());
+		cbxDatabases.setSelectedItem( DatabaseType.Utils.getByDriver( propertiesManager.getDriver() ));
 		txtPassword.setText(propertiesManager.getPassword());
 		txtUsernae.setText(propertiesManager.getUsername());
-		txtUrl.setText(propertiesManager.getUrl());
+		if(propertiesManager.getUrl() == null || propertiesManager.getUrl().isEmpty()){
+			changeSchemaValue();
+		} else {
+			txtUrl.setText(propertiesManager.getUrl());
+		}
 	}
 	private void saveProperties() {
 		propertiesManager.setChangeLogFile(txtChangeLogFile.getText());
-		propertiesManager.setDriver(txtDriver.getText());
+		propertiesManager.setDriver(cbxDatabases.getItemAt(cbxDatabases.getSelectedIndex()).getDriver());
 		propertiesManager.setPassword(txtPassword.getText());
 		propertiesManager.setUsername(txtUsernae.getText());
 		propertiesManager.setUrl(txtUrl.getText());
@@ -248,4 +341,8 @@ public class Liquigui extends JFrame {
 		return liquibaseCommand;
 	}
 
+	private void changeSchemaValue() {
+		String url = cbxDatabases.getItemAt(cbxDatabases.getSelectedIndex()).getURL();
+		txtUrl.setText(url.replace("<SCHEMA>", txtSchema.getText()));
+	}
 }

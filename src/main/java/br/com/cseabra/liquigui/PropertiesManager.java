@@ -65,14 +65,9 @@ public class PropertiesManager {
 	 
 			// load a properties file
 			prop.load(input);
-	 
-			setDriver(prop.getProperty("driver", ""));
-			setUsername(prop.getProperty("username", ""));
-			setPassword(prop.getProperty("password", ""));
-			setUrl(prop.getProperty("url", ""));
-			setChangeLogFile(prop.getProperty("changeLogFile", ""));
-	 
+			setProperties(prop);
 		} catch (IOException ex) {
+			setProperties(prop);
 			ex.printStackTrace();
 		} finally {
 			if (input != null) {
@@ -83,6 +78,14 @@ public class PropertiesManager {
 				}
 			}
 		}
+	}
+
+	private void setProperties(Properties prop) {
+		setDriver(prop.getProperty("driver", DatabaseType.ORACLE.getDriver()));
+		setUsername(prop.getProperty("username", ""));
+		setPassword(prop.getProperty("password", ""));
+		setUrl(prop.getProperty("url", ""));
+		setChangeLogFile(prop.getProperty("changeLogFile", ""));
 	}
 	
 	public void save(){
