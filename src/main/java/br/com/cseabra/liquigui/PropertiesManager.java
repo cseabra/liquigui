@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class PropertiesManager {
 	private static final String LIQUIBASE_PROPERTIES = "liquibase.properties";
-	private String driver, username, password, url, changeLogFile;
+	private String driver, username, password, url, changeLogFile, defaultSchemaName, logLevel;
 	
 	public String getDriver() {
 		return driver;
@@ -50,6 +50,22 @@ public class PropertiesManager {
 	public void setChangeLogFile(String changeLogFile) {
 		this.changeLogFile = changeLogFile;
 	}
+	
+	public String getDefaultSchemaName() {
+		return defaultSchemaName;
+	}
+
+	public void setDefaultSchemaName(String defaultSchemaName) {
+		this.defaultSchemaName = defaultSchemaName;
+	}
+
+	public String getLogLevel() {
+		return logLevel;
+	}
+
+	public void setLogLevel(String logLevel) {
+		this.logLevel = logLevel;
+	}
 
 	public PropertiesManager(){
 		loadProperties();
@@ -86,6 +102,8 @@ public class PropertiesManager {
 		setPassword(prop.getProperty("password", ""));
 		setUrl(prop.getProperty("url", ""));
 		setChangeLogFile(prop.getProperty("changeLogFile", ""));
+		setDefaultSchemaName(prop.getProperty("defaultSchemaName", ""));
+		setLogLevel(prop.getProperty("logLevel", ""));
 	}
 	
 	public void save(){
@@ -101,6 +119,8 @@ public class PropertiesManager {
 			prop.setProperty("password", getPassword());
 			prop.setProperty("url", getUrl());
 			prop.setProperty("changeLogFile", getChangeLogFile());
+			prop.setProperty("defaultSchemaName", getDefaultSchemaName());
+			prop.setProperty("logLevel", getLogLevel());
 	 
 			prop.store(output, null);
 	 

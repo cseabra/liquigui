@@ -27,9 +27,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import br.com.cseabra.liquigui.liquibase.LiquibaseCommand;
+import br.com.cseabra.liquigui.liquibase.LogLevel;
+import java.awt.Window.Type;
 
 public class Liquigui extends JFrame {
 	private static final String LIQUIBASE_EXECUTABLE = "liquibase.bat ";
@@ -129,6 +132,8 @@ public class Liquigui extends JFrame {
 	private final JTextField txtChangeLogFile = new JTextField();
 	private final JLabel lblSchema = new JLabel("Schema");
 	private final JTextField txtSchema = new JTextField();
+	private final JComboBox<String> cbxLogLevel = new JComboBox<String>();
+	private final JLabel lblNvelDoLog = new JLabel("Nível do log");
 
 	/**
 	 * Launch the application.
@@ -137,6 +142,7 @@ public class Liquigui extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					Liquigui frame = new Liquigui();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -147,6 +153,8 @@ public class Liquigui extends JFrame {
 	}
 
 	public Liquigui() {
+		setResizable(false);
+		setType(Type.UTILITY);
 		txtUrl.setColumns(10);
 		buildGUI();
 	}
@@ -174,9 +182,16 @@ public class Liquigui extends JFrame {
 		List<LiquibaseCommand> commands = new ArrayList<LiquibaseCommand>(Arrays.asList(LiquibaseCommand.values()));
 		commands.remove(LiquibaseCommand.DEFAULT);
 
-		//Alimenta combobox
+		//Alimenta comboboxs
 		cbxCommands.setModel(new DefaultComboBoxModel<LiquibaseCommand>(commands.toArray(new LiquibaseCommand[] {})));
-
+		
+		{
+			String[] logLevels = new String[LogLevel.values().length];
+			for(int i = 0; i < LogLevel.values().length; i++){
+				logLevels[i] = LogLevel.values()[i].toString();
+			}
+			cbxLogLevel.setModel(new DefaultComboBoxModel<String>(logLevels));
+		}
 		//Alinha botao de 'Executar' a direita
 		((FlowLayout)pnlSouth.getLayout()).setAlignment(FlowLayout.RIGHT);
 
@@ -294,6 +309,10 @@ public class Liquigui extends JFrame {
 		pnlCommand.add(cbxCommands);
 		pnlCommand.add(btnAddParemeter);
 		pnlCenter.add(pnlParameters);
+		
+		pnlSouth.add(lblNvelDoLog);
+		
+		pnlSouth.add(cbxLogLevel);
 		pnlSouth.add(btnExecute, BorderLayout.CENTER);
 		
 		
@@ -307,6 +326,8 @@ public class Liquigui extends JFrame {
 		cbxDatabases.setSelectedItem( DatabaseType.Utils.getByDriver( propertiesManager.getDriver() ));
 		txtPassword.setText(propertiesManager.getPassword());
 		txtUsernae.setText(propertiesManager.getUsername());
+		txtSchema.setText(propertiesManager.getDefaultSchemaName());
+		cbxLogLevel.setSelectedItem(propertiesManager.getLogLevel());
 		if(propertiesManager.getUrl() == null || propertiesManager.getUrl().isEmpty()){
 			changeSchemaValue();
 		} else {
@@ -319,6 +340,8 @@ public class Liquigui extends JFrame {
 		propertiesManager.setPassword(txtPassword.getText());
 		propertiesManager.setUsername(txtUsernae.getText());
 		propertiesManager.setUrl(txtUrl.getText());
+		propertiesManager.setDefaultSchemaName(txtSchema.getText());
+		propertiesManager.setLogLevel(cbxLogLevel.getSelectedItem().toString());
 		propertiesManager.save();
 	}
 	
