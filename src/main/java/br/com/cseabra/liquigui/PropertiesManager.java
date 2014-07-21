@@ -130,7 +130,8 @@ public class PropertiesManager {
 			prop.setProperty("changeLogFile", getChangeLogFile());
 			prop.setProperty("defaultSchemaName", getDefaultSchemaName());
 			prop.setProperty("logLevel", getLogLevel());
-			prop.setProperty("local", getLocal());
+			//O liquibase nao reconhece esse parametro, por isso nao salvando no liquibase.properties
+//			prop.setProperty("local", getLocal());
 	 
 			prop.store(output, null);
 	 

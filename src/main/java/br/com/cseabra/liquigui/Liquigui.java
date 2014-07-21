@@ -154,13 +154,12 @@ public class Liquigui extends JFrame {
 	}
 
 	public Liquigui() {
-		setResizable(false);
 		buildGUI();
 	}
 
 	private void buildGUI() {
 		//Configura janela
-		setBounds(100, 100, 523, 348);
+		setBounds(100, 100, 523, 407);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
