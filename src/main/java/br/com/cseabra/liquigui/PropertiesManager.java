@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class PropertiesManager {
 	private static final String LIQUIBASE_PROPERTIES = "liquibase.properties";
-	private String driver, username, password, url, changeLogFile, defaultSchemaName, logLevel;
+	private String driver, username, password, url, changeLogFile, defaultSchemaName, logLevel, local;
 	
 	public String getDriver() {
 		return driver;
@@ -67,6 +67,14 @@ public class PropertiesManager {
 		this.logLevel = logLevel;
 	}
 
+	public String getLocal() {
+		return local;
+	}
+
+	public void setLocal(String local) {
+		this.local = local;
+	}
+
 	public PropertiesManager(){
 		loadProperties();
 	}
@@ -104,6 +112,7 @@ public class PropertiesManager {
 		setChangeLogFile(prop.getProperty("changeLogFile", ""));
 		setDefaultSchemaName(prop.getProperty("defaultSchemaName", ""));
 		setLogLevel(prop.getProperty("logLevel", ""));
+		setLocal(prop.getProperty("local", ""));
 	}
 	
 	public void save(){
@@ -121,6 +130,7 @@ public class PropertiesManager {
 			prop.setProperty("changeLogFile", getChangeLogFile());
 			prop.setProperty("defaultSchemaName", getDefaultSchemaName());
 			prop.setProperty("logLevel", getLogLevel());
+			prop.setProperty("local", getLocal());
 	 
 			prop.store(output, null);
 	 

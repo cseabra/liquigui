@@ -32,7 +32,6 @@ import javax.swing.border.EmptyBorder;
 
 import br.com.cseabra.liquigui.liquibase.LiquibaseCommand;
 import br.com.cseabra.liquigui.liquibase.LogLevel;
-import java.awt.Window.Type;
 
 public class Liquigui extends JFrame {
 	private static final String LIQUIBASE_EXECUTABLE = "liquibase.bat ";
@@ -134,6 +133,8 @@ public class Liquigui extends JFrame {
 	private final JTextField txtSchema = new JTextField();
 	private final JComboBox<String> cbxLogLevel = new JComboBox<String>();
 	private final JLabel lblNvelDoLog = new JLabel("Nível do log");
+	private final JLabel lblNewLabel_2 = new JLabel("Local");
+	private final JTextField txtLocal = new JTextField();
 
 	/**
 	 * Launch the application.
@@ -154,14 +155,12 @@ public class Liquigui extends JFrame {
 
 	public Liquigui() {
 		setResizable(false);
-		setType(Type.UTILITY);
-		txtUrl.setColumns(10);
 		buildGUI();
 	}
 
 	private void buildGUI() {
 		//Configura janela
-		setBounds(100, 100, 523, 327);
+		setBounds(100, 100, 523, 348);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -199,44 +198,45 @@ public class Liquigui extends JFrame {
 		cbxCommands.addActionListener(cbxCommandsActionListener);
 		btnAddParemeter.addActionListener(btnAddParemeterActionListener);
 		btnExecute.addActionListener(btnExecuteActionListener);
-		txtSchema.addKeyListener(txtSchemaKeyListener);
+		txtLocal.setText("localhost");
+		txtLocal.addKeyListener(txtSchemaKeyListener);
 
 		//Adiciona paineis uns aos outros
 		setContentPane(contentPane);
 		contentPane.add(lblLiquigui, BorderLayout.NORTH);
 		contentPane.add(pnlCenter);
+		FlowLayout flowLayout = (FlowLayout) pnlSouth.getLayout();
+		flowLayout.setVgap(10);
 		contentPane.add(pnlSouth, BorderLayout.SOUTH);
 		pnlCenter.add(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] {75, 400, 0};
-		gbl_panel.rowHeights = new int[]{30, 30, 30, 30, 30, 30, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[] {75, 430};
+		gbl_panel.rowHeights = new int[] {30, 30, 30, 30, 30, 30, 25};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		panel.setLayout(gbl_panel);
+		cbxDatabases.setModel(new DefaultComboBoxModel<DatabaseType>(DatabaseType.values()));
+		cbxDatabases.addActionListener(cbxDatabasesListener);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.fill = GridBagConstraints.BOTH;
 		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel.gridx = 0;
 		gbc_lblNewLabel.gridy = 0;
 		panel.add(lblNewLabel, gbc_lblNewLabel);
-				cbxDatabases.setModel(new DefaultComboBoxModel<DatabaseType>(DatabaseType.values()));
-				cbxDatabases.addActionListener(cbxDatabasesListener);
-				
-				GridBagConstraints gbc_cbxDatabases = new GridBagConstraints();
-				gbc_cbxDatabases.fill = GridBagConstraints.BOTH;
-				gbc_cbxDatabases.insets = new Insets(0, 0, 5, 0);
-				gbc_cbxDatabases.gridx = 1;
-				gbc_cbxDatabases.gridy = 0;
-				panel.add(cbxDatabases, gbc_cbxDatabases);
-		
-				GridBagConstraints gbc_lblSchema = new GridBagConstraints();
-				gbc_lblSchema.fill = GridBagConstraints.BOTH;
-				gbc_lblSchema.insets = new Insets(0, 0, 5, 5);
-				gbc_lblSchema.gridx = 0;
-				gbc_lblSchema.gridy = 1;
-				panel.add(lblSchema, gbc_lblSchema);
+		GridBagConstraints gbc_cbxDatabases = new GridBagConstraints();
+		gbc_cbxDatabases.fill = GridBagConstraints.BOTH;
+		gbc_cbxDatabases.insets = new Insets(0, 0, 5, 0);
+		gbc_cbxDatabases.gridx = 1;
+		gbc_cbxDatabases.gridy = 0;
+		panel.add(cbxDatabases, gbc_cbxDatabases);
+		GridBagConstraints gbc_lblSchema = new GridBagConstraints();
+		gbc_lblSchema.fill = GridBagConstraints.BOTH;
+		gbc_lblSchema.insets = new Insets(0, 0, 5, 5);
+		gbc_lblSchema.gridx = 0;
+		gbc_lblSchema.gridy = 1;
+		panel.add(lblSchema, gbc_lblSchema);
+		txtSchema.addKeyListener(txtSchemaKeyListener);
 		GridBagConstraints gbc_txtSchema = new GridBagConstraints();
 		gbc_txtSchema.fill = GridBagConstraints.BOTH;
 		gbc_txtSchema.insets = new Insets(0, 0, 5, 0);
@@ -244,7 +244,6 @@ public class Liquigui extends JFrame {
 		gbc_txtSchema.gridy = 1;
 		panel.add(txtSchema, gbc_txtSchema);
 		lblUsername.setHorizontalAlignment(SwingConstants.LEFT);
-		
 		GridBagConstraints gbc_lblUsername = new GridBagConstraints();
 		gbc_lblUsername.fill = GridBagConstraints.BOTH;
 		gbc_lblUsername.insets = new Insets(0, 0, 5, 5);
@@ -252,7 +251,6 @@ public class Liquigui extends JFrame {
 		gbc_lblUsername.gridy = 2;
 		panel.add(lblUsername, gbc_lblUsername);
 		txtUsernae.setColumns(10);
-		
 		GridBagConstraints gbc_txtUsernae = new GridBagConstraints();
 		gbc_txtUsernae.fill = GridBagConstraints.BOTH;
 		gbc_txtUsernae.insets = new Insets(0, 0, 5, 0);
@@ -260,7 +258,6 @@ public class Liquigui extends JFrame {
 		gbc_txtUsernae.gridy = 2;
 		panel.add(txtUsernae, gbc_txtUsernae);
 		lblPassword.setHorizontalAlignment(SwingConstants.LEFT);
-		
 		GridBagConstraints gbc_lblPassword = new GridBagConstraints();
 		gbc_lblPassword.fill = GridBagConstraints.BOTH;
 		gbc_lblPassword.insets = new Insets(0, 0, 5, 5);
@@ -268,7 +265,6 @@ public class Liquigui extends JFrame {
 		gbc_lblPassword.gridy = 3;
 		panel.add(lblPassword, gbc_lblPassword);
 		txtPassword.setColumns(10);
-		
 		GridBagConstraints gbc_txtPassword = new GridBagConstraints();
 		gbc_txtPassword.fill = GridBagConstraints.BOTH;
 		gbc_txtPassword.insets = new Insets(0, 0, 5, 0);
@@ -276,7 +272,6 @@ public class Liquigui extends JFrame {
 		gbc_txtPassword.gridy = 3;
 		panel.add(txtPassword, gbc_txtPassword);
 		lblChangelogfile.setHorizontalAlignment(SwingConstants.LEFT);
-		
 		GridBagConstraints gbc_lblChangelogfile = new GridBagConstraints();
 		gbc_lblChangelogfile.fill = GridBagConstraints.BOTH;
 		gbc_lblChangelogfile.insets = new Insets(0, 0, 5, 5);
@@ -284,25 +279,35 @@ public class Liquigui extends JFrame {
 		gbc_lblChangelogfile.gridy = 4;
 		panel.add(lblChangelogfile, gbc_lblChangelogfile);
 		txtChangeLogFile.setColumns(10);
-		
 		GridBagConstraints gbc_txtChangeLogFile = new GridBagConstraints();
 		gbc_txtChangeLogFile.fill = GridBagConstraints.BOTH;
 		gbc_txtChangeLogFile.insets = new Insets(0, 0, 5, 0);
 		gbc_txtChangeLogFile.gridx = 1;
 		gbc_txtChangeLogFile.gridy = 4;
 		panel.add(txtChangeLogFile, gbc_txtChangeLogFile);
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
-		
+		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
+		gbc_lblNewLabel_2.fill = GridBagConstraints.BOTH;
+		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_2.gridx = 0;
+		gbc_lblNewLabel_2.gridy = 5;
+		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		GridBagConstraints gbc_txtLocal = new GridBagConstraints();
+		gbc_txtLocal.fill = GridBagConstraints.BOTH;
+		gbc_txtLocal.insets = new Insets(0, 0, 5, 0);
+		gbc_txtLocal.gridx = 1;
+		gbc_txtLocal.gridy = 5;
+		panel.add(txtLocal, gbc_txtLocal);
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.fill = GridBagConstraints.BOTH;
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 0, 5);
 		gbc_lblNewLabel_1.gridx = 0;
-		gbc_lblNewLabel_1.gridy = 5;
+		gbc_lblNewLabel_1.gridy = 6;
 		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_txtUrl = new GridBagConstraints();
 		gbc_txtUrl.fill = GridBagConstraints.BOTH;
 		gbc_txtUrl.gridx = 1;
-		gbc_txtUrl.gridy = 5;
+		gbc_txtUrl.gridy = 6;
 		panel.add(txtUrl, gbc_txtUrl);
 		pnlCenter.add(pnlCommand);
 		pnlCommand.add(lblEscolhaOComando);
@@ -327,6 +332,7 @@ public class Liquigui extends JFrame {
 		txtPassword.setText(propertiesManager.getPassword());
 		txtUsernae.setText(propertiesManager.getUsername());
 		txtSchema.setText(propertiesManager.getDefaultSchemaName());
+		txtLocal.setText(propertiesManager.getLocal());
 		cbxLogLevel.setSelectedItem(propertiesManager.getLogLevel());
 		if(propertiesManager.getUrl() == null || propertiesManager.getUrl().isEmpty()){
 			changeSchemaValue();
@@ -341,6 +347,7 @@ public class Liquigui extends JFrame {
 		propertiesManager.setUsername(txtUsernae.getText());
 		propertiesManager.setUrl(txtUrl.getText());
 		propertiesManager.setDefaultSchemaName(txtSchema.getText());
+		propertiesManager.setLocal(txtLocal.getText());
 		propertiesManager.setLogLevel(cbxLogLevel.getSelectedItem().toString());
 		propertiesManager.save();
 	}
@@ -365,7 +372,18 @@ public class Liquigui extends JFrame {
 	}
 
 	private void changeSchemaValue() {
-		String url = cbxDatabases.getItemAt(cbxDatabases.getSelectedIndex()).getURL();
-		txtUrl.setText(url.replace("<SCHEMA>", txtSchema.getText()));
+		StringBuilder url = new StringBuilder(cbxDatabases.getItemAt(cbxDatabases.getSelectedIndex()).getURL());
+
+		int has;
+		
+		has = url.indexOf("<LOCAL>");
+		if(!txtLocal.getText().isEmpty() && has > -1)
+			url.replace(has, "<LOCAL>".length() + has,  txtLocal.getText());
+		
+		has = url.indexOf("<SCHEMA>");
+		if(!txtSchema.getText().isEmpty() && has > -1)
+			url.replace(has, "<SCHEMA>".length() + has,  txtSchema.getText());
+		
+		txtUrl.setText(url.toString());
 	}
 }

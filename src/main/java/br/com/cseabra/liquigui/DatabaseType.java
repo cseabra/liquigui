@@ -41,6 +41,16 @@ public enum DatabaseType {
 		String getURL() {
 			return "jdbc:h2:file:<LOCAL>;DATABASE_TO_UPPER=false;ALIAS_COLUMN_NAME=true";
 		}
+	}, SQLITE {
+		@Override
+		String getDriver() {
+			return "org.sqlite.JDBC";
+		}
+
+		@Override
+		String getURL() {
+			return "jdbc:sqlite:<LOCAL>";
+		}
 	};
 	abstract String getDriver();
 	abstract String getURL();
